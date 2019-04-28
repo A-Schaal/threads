@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <ucontext.h>
+#include <stdio.h>
 
 #include "thread.h"
 #include "linked_list.h"
@@ -91,26 +92,30 @@ int t_create(start_f start, int thread_id, int priority) {
     //intialise the fields of the tcb
     new_tcb->thread_id = thread_id;
     new_tcb->thread_priority = priority;
-    
-    t_halt(0);
 
-    //save this location in the program
     int flag = 1;
+    
+    //halt the current thread and save its current state
+    tcb_t *cur_tcb = t_halt(0);
     getcontext(&new_tcb->thread_context);
-
-    //add the new tcb to the front of the ready queue, and run it immediately
-    ready = add_to_linked_list(ready, (void *) new_tcb);
 
     //...then run the start function exactly once
     if (flag) {
         flag = 0;
+        
+        //add the new tcb to the front of the ready queue, and run it immediately
+        ready = add_to_linked_list(ready, (void *) new_tcb);
         t_run_next(start);
     }
 }
 
 void t_terminate() {
     int flag = 1;
+    
+    //just halt the current thread amd free it in the process;
+    //since we freed it, we don't need to save its current state
     t_halt(1);
+    
 
     if (flag) {
         flag = 0;
@@ -120,7 +125,10 @@ void t_terminate() {
 
 void t_yield() {
     int flag = 1;
-    t_halt(0);
+
+    //halt the current thread and save its current state
+    tcb_t *cur_tcb = t_halt(0);
+    getcontext(&cur_tcb->thread_context);
 
     if (flag) {
         flag = 0;
