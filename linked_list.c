@@ -60,13 +60,13 @@ linked_list_t * append_to_linked_list(linked_list_t *head, void *value) {
     }
 
     //otherwise, find the curent tail
-    for (linked_list_t *cur = head; NULL != cur; cur = cur->next) {
-        if (NULL == cur->next) {
-            //...and put our new node after it, as the nrew tail
-            linked_list_t *new_el = create_linked_list(value, cur, NULL); 
-           cur->next = new_el;
-        }
-    }
+    linked_list_t *cur;
+    for (cur = head; NULL != cur->next; cur = cur->next) {}
+
+
+    //...and put our new node after it, as the new tail
+    linked_list_t *new_el = create_linked_list(value, cur, NULL); 
+    cur->next = new_el;
 
     return head;
 }
