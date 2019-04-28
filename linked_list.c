@@ -53,15 +53,22 @@ linked_list_t * add_to_linked_list(linked_list_t *head, void *value) {
     return new_head;
 }
 
-linked_list_t * append_to_linked_list(linked_list_t *tail, void *value) {
-    //make a new list el to hold value, and make it the new tail
-    linked_list_t *new_tail = create_linked_list(value, tail, NULL);
-    
-    if (NULL != tail) {
-        tail->next = new_tail;
+linked_list_t * append_to_linked_list(linked_list_t *head, void *value) {
+    //if we don't have a list yet, make this the head
+    if (NULL == head) {
+        return create_linked_list(value, NULL, NULL);
     }
 
-    return new_tail;
+    //otherwise, find the curent tail
+    for (linked_list_t *cur = head; NULL != cur; cur = cur->next) {
+        if (NULL == cur->next) {
+            //...and put our new node after it, as the nrew tail
+            linked_list_t *new_el = create_linked_list(value, cur, NULL); 
+           cur->next = new_el;
+        }
+    }
+
+    return head;
 }
 
 linked_list_t * remove_from_linked_list(linked_list_t *head, 
