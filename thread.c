@@ -77,9 +77,12 @@ void t_run_next(start_f start) {
     );
     running = append_to_linked_list(running, (void *) next_tcb);
 
+    printf("pid: %d\n", next_tcb->thread_id);
+    fflush(stdout);
+
     //if we aren't given a start function to run, switch to the last context used by this tcb
     if (NULL == start) {
-        setcontext(&next_tcb->thread_context);
+      setcontext(&next_tcb->thread_context);
     //if we are given a start functin, just run it
     } else {
         start(next_tcb->thread_id);
@@ -87,40 +90,40 @@ void t_run_next(start_f start) {
 }
 
 int t_create(start_f start, int thread_id, int priority) {
-    tcb_t *new_tcb = malloc(sizeof(tcb_t));
+  tcb_t *new_tcb = malloc(sizeof(tcb_t));
 
-    //intialise the fields of the tcb
-    new_tcb->thread_id = thread_id;
-    new_tcb->thread_priority = priority;
+  //intialise the fields of the tcb
+  new_tcb->thread_id = thread_id;
+  new_tcb->thread_priority = priority;
 
-    int flag = 1;
-    
-    //halt the current thread and save its current state
-    tcb_t *cur_tcb = t_halt(0);
-    getcontext(&new_tcb->thread_context);
+  int flag = 1;
+  
+  //halt the current thread and save its current state
+  tcb_t *cur_tcb = t_halt(0);
+  getcontext(&cur_tcb->thread_context);
 
-    //...then run the start function exactly once
-    if (flag) {
-        flag = 0;
-        
-        //add the new tcb to the front of the ready queue, and run it immediately
-        ready = add_to_linked_list(ready, (void *) new_tcb);
-        t_run_next(start);
-    }
+  //...then run the start function exactly once
+  if (flag) {
+      flag = 0;
+      
+      //add the new tcb to the front of the ready queue, and run it immediately
+      ready = add_to_linked_list(ready, (void *) new_tcb);
+      t_run_next(start);
+  }
 }
 
 void t_terminate() {
-    int flag = 1;
-    
-    //just halt the current thread amd free it in the process;
-    //since we freed it, we don't need to save its current state
-    t_halt(1);
-    
+  int flag = 1;
+  
+  //just halt the current thread amd free it in the process;
+  //since we freed it, we don't need to save its current state
+  t_halt(1);
+  
 
-    if (flag) {
-        flag = 0;
-        t_run_next(NULL);
-    }
+  if (flag) {
+      flag = 0;
+      t_run_next(NULL);
+  }
 }
 
 void t_yield() {
