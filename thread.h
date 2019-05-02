@@ -16,4 +16,8 @@
     int t_create(start_f start, int thr_id, int pri);
     void t_terminate();
     void t_yield();
+
+    #define STACK_SIZE 0x10000
+
+
 #endif
