@@ -1,13 +1,15 @@
 CC = gcc
 
 .PHONY:all
-all: test01 test01x
+all: test01 test01x semaphore.o
 
 linked_list.o: linked_list.c linked_list.h
 	$(CC) -g -c linked_list.c
 
 thread.o: thread.c thread.h linked_list.o
 	$(CC) -g -c thread.c
+semaphore.o: semaphore.c semaphore.h 
+	$(CC) -g -c semaphore.c
 
 test01: test01.c thread.o
 	$(CC) -g test01.c -o test01 thread.o linked_list.o
