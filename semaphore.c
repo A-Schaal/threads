@@ -67,3 +67,9 @@ void sem_signal(sem_t *sp) {
     }
   }
 }
+
+void sem_destroy(sem_t **sp) {
+  free_linked_list((*sp)->waitlist, (free_f) free_nothing);
+
+  free(*sp);
+}
