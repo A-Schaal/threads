@@ -1,23 +1,29 @@
 #ifndef THREADS
-    #define THREADS
+#define THREADS
 
-    #include <ucontext.h>
+  #include <ucontext.h>
 
-    typedef void (*start_f) (int thread_id);
+  typedef void (*start_f) (int thread_id);
 
-    typedef struct tcb {
-        int        thread_id;
-        int        thread_priority;
-        ucontext_t thread_context;
-    } tcb_t;
+  typedef struct tcb {
+    int        thread_id;
+    int        thread_priority;
+    ucontext_t thread_context;
+  } tcb_t;
 
-    void t_init();
-    void t_shutdown();
-    int t_create(start_f start, int thr_id, int pri);
-    void t_terminate();
-    void t_yield();
+  //helper functions for using tcbs
+  int compare_tcb(tcb_t *tcb_0, tcb_t *tcb_1);
+  void free_nothing(void *thing);
+  
+  //thread api
+  void t_init();
+  void t_shutdown();
+  tcb_t * t_halt(int terminate, int ready);
+  int t_create(start_f start, int thr_id, int pri);
+  void t_run(tcb_t *next_tcb);
+  void t_run_next();
+  void t_terminate();
+  void t_yield();
 
-    #define STACK_SIZE 0x10000
-
-
+  #define STACK_SIZE 0x10000
 #endif
