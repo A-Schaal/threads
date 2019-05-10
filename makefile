@@ -11,6 +11,7 @@ linked_list.o: linked_list.c linked_list.h
 
 thread.o: thread.c thread.h linked_list.o
 	$(CC) -g -c thread.c
+
 semaphore.o: semaphore.c semaphore.h 
 	$(CC) -g -c semaphore.c
 
