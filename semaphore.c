@@ -18,11 +18,8 @@ int sem_init(sem_t **sp, int sem_count){
 }
 
 void sem_wait(sem_t *sp) {
-  //decrement count atomically
-  __sync_sub_and_fetch(&sp->count, 1);
-
   //let other threads do work until we get a positive count
-  while (sp->count < 0) {
+  while (sp->count <= 0) {
     int flag = 1;
 
     tcb_t *cur_tcb = t_halt(0, 0);
@@ -34,8 +31,10 @@ void sem_wait(sem_t *sp) {
       t_run_next();
     }
   }
+  
+  //decrement count atomically
+  __sync_sub_and_fetch(&sp->count, 1);
 
-  t_yield();
 }
 
 void sem_signal(sem_t *sp) {
