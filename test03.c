@@ -16,15 +16,15 @@ void read_function(int val)
    int res_before, res_after;
 
    for (i = 0; i < 5; i++) {
-      printf("I am READ thread %d (%d)\n", val, i);
+      printf("I am READ thread %d (%ld)\n", val, i);
 
       sem_wait(s);
             
       res_before = resource;
-      printf("  [%d READ %d] resource = %d\n", val, i, resource);
+      printf("  [%d READ %ld] resource = %d\n", val, i, resource);
 
       t_yield();
-      printf("  ** [%d READ %d] returns from t_yield()\n", val, i);
+      printf("  ** [%d READ %ld] returns from t_yield()\n", val, i);
       res_after = resource;
 
       if (res_before != res_after) {
@@ -44,12 +44,12 @@ void write_function(int val)
    long i, j ;
 
    for (i = 0; i < 5; i++) {
-      printf("I am WRITE thread %d (%d)\n", val, i);
+      printf("I am WRITE thread %d (%ld)\n", val, i);
 
       sem_wait(s);
             
       resource = rand() % 100;      
-      printf("  [%d WRITE %d] resource = %d\n", val, i, resource);
+      printf("  [%d WRITE %ld] resource = %d\n", val, i, resource);
 
       sem_signal(s);
 
