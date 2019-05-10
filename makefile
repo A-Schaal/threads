@@ -1,6 +1,6 @@
 CC = gcc
 
-TESTS = test01@ test01x@
+TESTS = test01@ test01x@ test03@
 BINS = $(subst @,,$(TESTS))
 
 .PHONY:all

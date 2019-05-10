@@ -13,6 +13,7 @@
 
   //helper functions for using tcbs
   int compare_tcb(tcb_t *tcb_0, tcb_t *tcb_1);
+  void free_tcb(tcb_t *tcb);
   void free_nothing(void *thing);
   
   //thread api

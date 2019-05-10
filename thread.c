@@ -20,8 +20,8 @@ void t_init() {
 }
 
 void t_shutdown() {
-  free_linked_list(running_list, free);
-  free_linked_list(ready_list, free);
+  free_linked_list(running_list, (free_f) free_tcb);
+  free_linked_list(ready_list, (free_f) free_tcb);
 }
 
 //just compares the thread ids
@@ -31,6 +31,16 @@ int compare_tcb(tcb_t *tcb_0, tcb_t *tcb_1) {
 
 void free_nothing(void *thing) {}
 
+void free_tcb(tcb_t *tcb) {
+  //we malloc a stack pointer for every thread aside from main,
+  //so it must be freed
+  if (0 != tcb->thread_id) {
+    free(tcb->thread_context.uc_stack.ss_sp);
+  }
+
+  free(tcb);
+}
+
 tcb_t * t_halt(int terminate, int ready) {
   if (NULL == running_list) {
     return NULL;
@@ -39,27 +49,20 @@ tcb_t * t_halt(int terminate, int ready) {
   //get the thread at the head of thr running_list queue
   tcb_t * cur_tcb = (tcb_t *) running_list->value;
   
+  //remove this thread from the running_list queue
+  running_list = remove_from_linked_list(
+      running_list, 
+      (void *) cur_tcb,
+      (compare_f) compare_tcb, 
+      free_nothing      
+  );
+
   if (terminate) {
-    //remove this thread from the running_list queue
-    running_list = remove_from_linked_list(
-        running_list, 
-        (void *) cur_tcb, 
-        (compare_f) compare_tcb, 
-        free
-        );
-
-    //we got rid of the current tcb, so no need to return it
+    
+    free_tcb(cur_tcb);
     return NULL;
-
+  
   } else {
-    //remove this thread from the running_list queue
-    running_list = remove_from_linked_list(
-        running_list, 
-        (void *) cur_tcb,
-        (compare_f) compare_tcb, 
-        free_nothing
-        );
-
     if (ready) {
       //...and add it to the end of the ready_list queue
       ready_list = append_to_linked_list(ready_list, (void *) cur_tcb);
@@ -93,7 +96,7 @@ void t_run_next() {
       (void *) next_tcb,
       (compare_f) compare_tcb, 
       free_nothing
-      );
+  );
   
   t_run(next_tcb);
 }
