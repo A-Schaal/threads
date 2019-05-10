@@ -1,5 +1,8 @@
 CC = gcc
 
+TESTS = test01@ test01x@
+BINS = $(subst @,,$(TESTS))
+
 .PHONY:all
 all: test01 test01x semaphore.o
 
@@ -18,4 +21,4 @@ test01x: test01x.c thread.o
 	$(CC) -g test01x.c -o test01x thread.o linked_list.o
 
 clean: 
-	rm -rf thread.o test01.o test01x.o
+	rm -rf *.o $(BINS)
