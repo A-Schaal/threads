@@ -73,20 +73,19 @@ tcb_t * t_halt(int terminate, int ready) {
 }
 
 void t_run(tcb_t *next_tcb) {
+  running_list = append_to_linked_list(running_list, (void *) next_tcb);
+
+  printf("Running thread %d next\n", next_tcb->thread_id);
+  fflush(stdout);
+
+  setcontext(&next_tcb->thread_context);
+}
+
+void t_run_next() {
   if (NULL == ready_list) {
     return;
   }
     
-  running_list = append_to_linked_list(running_list, (void *) next_tcb);
-
-  fflush(stdout);
-
-  //if we aren't given a start function to run, switch to the last context used by this tcb
-  setcontext(&next_tcb->thread_context);
-  //if we are given a start functin, just run it
-}
-
-void t_run_next() {
   //get the next tcb off of the ready_list queue
   tcb_t *next_tcb = (tcb_t *) ready_list->value;
   ready_list = remove_from_linked_list(
@@ -112,12 +111,13 @@ int t_create(start_f start, int thread_id, int priority) {
   new_tcb->thread_context.uc_stack.ss_sp = malloc(STACK_SIZE);
   new_tcb->thread_context.uc_stack.ss_size = STACK_SIZE;
   new_tcb->thread_context.uc_stack.ss_flags = 0;
-  tcb_t *cur = (tcb_t *) running_list->value;
-  new_tcb->thread_context.uc_link  = &cur->thread_context;
+  tcb_t *cur_tcb = (tcb_t *) running_list->value;
+  new_tcb->thread_context.uc_link  = &cur_tcb->thread_context;
 
   if(flag){
     flag = 0;
     makecontext(&new_tcb->thread_context,  (void*)start, 1, thread_id);
+    
     //add the new tcb to the front of the ready_list queue, and run it immediately
     ready_list = append_to_linked_list(ready_list, (void *) new_tcb);
   }
