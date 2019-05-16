@@ -1,6 +1,6 @@
 CC = gcc
 
-TESTS = test01@ test01x@ test03@ test06
+TESTS = test01@ test01x@ test03@ test06@
 BINS = $(subst @,,$(TESTS))
 
 .PHONY:all
@@ -27,7 +27,7 @@ test01x: test01x.c thread.o
 test03: test03.c semaphore.o
 	$(CC) -g test03.c -o test03 semaphore.o thread.o linked_list.o
 
-test06: test03.c mailbox.o
+test06: test06.c mailbox.o
 	$(CC) -g test06.c -o test06 mailbox.o semaphore.o thread.o linked_list.o
 clean: 
 	rm -rf *.o $(BINS)
