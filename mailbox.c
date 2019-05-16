@@ -54,11 +54,12 @@ void mbox_withdraw(mbox_t *mb, char *msg, int *len) {
       compare_pointer,
       free_nothing 
     );
+    strcpy(msg, envelope->message);
+    *len = envelope->len;
   
   } else {
     //just return nothing if we didn't find any message in the queue
-    msg = NULL;
-    len = 0;
+    *len = 0;
   }
 
   sem_signal(mb->sem);
