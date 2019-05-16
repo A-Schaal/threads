@@ -29,8 +29,6 @@ int compare_tcb(tcb_t *tcb_0, tcb_t *tcb_1) {
   return tcb_0->thread_id - tcb_1->thread_id;
 }
 
-void free_nothing(void *thing) {}
-
 void free_tcb(tcb_t *tcb) {
   //we malloc a stack pointer for every thread aside from main,
   //so it must be freed
@@ -77,9 +75,6 @@ tcb_t * t_halt(int terminate, int ready) {
 
 void t_run(tcb_t *next_tcb) {
   running_list = append_to_linked_list(running_list, (void *) next_tcb);
-
-  printf("Running thread %d next\n", next_tcb->thread_id);
-  fflush(stdout);
 
   setcontext(&next_tcb->thread_context);
 }
@@ -151,4 +146,13 @@ void t_yield() {
     flag = 0;
     t_run_next();
   }
+}
+
+int t_get_cur_thread_id() {
+  if (NULL == running_list) {
+    return NO_THREAD;
+  }
+
+  tcb_t *cur_tcb = (tcb_t *) running_list->value;
+  return cur_tcb->thread_id;
 }

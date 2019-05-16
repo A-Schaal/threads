@@ -124,3 +124,13 @@ linked_list_t * diff_linked_lists(linked_list_t *list_0, linked_list_t *list_1,
 
     return diff;
 }
+
+//placeholder free function that leaves the removed value intact
+void free_nothing(void *value) {}
+
+//compares solely based on pointer values
+int compare_pointers(void *pointer_0, void *pointer_1) {
+  return pointer_0 - pointer_1;
+}
+
+

@@ -3,6 +3,9 @@
 
   #include <ucontext.h>
 
+  #define ANY_THREAD -1
+  #define NO_THREAD -2
+
   typedef void (*start_f) (int thread_id);
 
   typedef struct tcb {
@@ -14,7 +17,6 @@
   //helper functions for using tcbs
   int compare_tcb(tcb_t *tcb_0, tcb_t *tcb_1);
   void free_tcb(tcb_t *tcb);
-  void free_nothing(void *thing);
   
   //thread api
   void t_init();
@@ -25,6 +27,7 @@
   void t_run_next();
   void t_terminate();
   void t_yield();
+  int get_cur_thread_id();
 
   #define STACK_SIZE 0x10000
 #endif

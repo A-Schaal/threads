@@ -29,4 +29,13 @@
     linked_list_t * copy_linked_list(linked_list_t *list, copy_f copy_value);
     linked_list_t * diff_linked_lists(linked_list_t *list_0, linked_list_t *list_1, 
                                       compare_f compare, copy_f copy_value, free_f free_value);
+
+    //helper functions which implement common compare_f and free_f behaviors
+
+    //basic free_f:
+    void free_nothing(void *value);
+    //the regular free function from stdlib.h also can be used
+
+    //basic compare_f:
+    int compare_pointers(void *pointer_0, void *pointer_1);
 #endif
