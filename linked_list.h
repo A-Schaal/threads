@@ -37,5 +37,5 @@
     //the regular free function from stdlib.h also can be used
 
     //basic compare_f:
-    int compare_pointers(void *pointer_0, void *pointer_1);
+    int compare_pointer(void *pointer_0, void *pointer_1);
 #endif
