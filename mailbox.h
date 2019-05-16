@@ -4,12 +4,12 @@
   #include "linked_list.h"
   #include "semaphore.h"
 
-  typedef struct message {
+  typedef struct envelope {
     char *message;     // copy of the message 
     int  len;          // length of the message 
     int  sender;       // TID of sender thread 
     int  receiver;     // TID of receiver thread 
-  } message_t;
+  } envelope_t;
 
   typedef struct {
     linked_list_t *message_queue;
