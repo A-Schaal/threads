@@ -20,6 +20,7 @@
     linked_list_t *create_linked_list(void *value, linked_list_t *prev, linked_list_t *next);
     void free_linked_list(linked_list_t *list, free_f free_value);
     linked_list_t * find_in_linked_list(linked_list_t *head, void *value, compare_f compare);
+    void * find_value_in_linked_list(linked_list_t *head, void *value, compare_f compare);
     linked_list_t * add_to_linked_list(linked_list_t *head, void *value);
     linked_list_t * append_to_linked_list(linked_list_t *tail, void *value);
     linked_list_t * remove_from_linked_list(linked_list_t *head, 

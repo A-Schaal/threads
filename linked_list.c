@@ -42,6 +42,11 @@ linked_list_t * find_in_linked_list(linked_list_t *head, void *value, compare_f 
     return NULL;
 }
 
+void * find_value_in_linked_list(linked_list_t *head, void *value, compare_f compare) {
+    linked_list_t *list_el = find_in_linked_list(head, value, compare);
+    return list_el->value;
+}
+
 linked_list_t * add_to_linked_list(linked_list_t *head, void *value) {
     //make a new list el to hold value, and make it the new head
     linked_list_t *new_head = create_linked_list(value, NULL, head);

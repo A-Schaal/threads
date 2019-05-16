@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <ucontext.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "thread.h"
 #include "linked_list.h"
@@ -9,7 +10,7 @@
 
 linked_list_t *running_list;
 linked_list_t *ready_list;
-mailbox_t *post_office;
+mbox_t *post_office;
 
 void t_init() {
   tcb_t *main = malloc(sizeof(tcb_t));
@@ -176,15 +177,14 @@ void send(int tid, char *msg, int len) {
   sem_signal(post_office->sem);
 }
 
-void receive(int *tid, char msg, int *len) {
+void receive(int *tid, char *msg, int *len) {
   //only one thread should modify the message queue at a time
   sem_wait(post_office->sem);
   
-  envelope_t *envelope;
-  envelope = find_in_linked_list(
+  envelope_t *envelope = (envelope_t *) find_value_in_linked_list(
     post_office->message_queue,
     (void *) tid,
-    (compare_f) compare_enevlop_id
+    (compare_f) compare_envelope_sender
   );
   
   if (NULL == envelope) {
@@ -196,9 +196,12 @@ void receive(int *tid, char msg, int *len) {
       post_office->message_queue, 
       (void *) envelope,
       compare_pointer,
-      free_nothing 
+      (free_f) envelope_destroy
     );
+    
+    strcpy(msg, envelope->message);
+    *len = envelope->len;
   }
 
-  sem_signal(mb->sem);
+  sem_signal(post_office->sem);
 }

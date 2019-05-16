@@ -3,13 +3,15 @@ CC = gcc
 TESTS = test01@ test01x@ test03@ test06@
 BINS = $(subst @,,$(TESTS))
 
+LIBRARY_OBJS = linked_list.o thread.o semaphore.o mailbox.o
+
 .PHONY:all
 all: $(BINS)
 
 linked_list.o: linked_list.c linked_list.h
 	$(CC) -g -c linked_list.c
 
-thread.o: thread.c thread.h linked_list.o
+thread.o: thread.c thread.h linked_list.h
 	$(CC) -g -c thread.c
 
 semaphore.o: semaphore.c semaphore.h 
@@ -18,16 +20,9 @@ semaphore.o: semaphore.c semaphore.h
 mailbox.o: mailbox.c mailbox.h
 	$(CC) -g -c mailbox.c
 
-test01: test01.c thread.o
-	$(CC) -g test01.c -o test01 thread.o linked_list.o
+#generic rule for making tests
+test%: test%.c $(LIBRARY_OBJS)
+	$(CC) -g $< -o $@ $(LIBRARY_OBJS)
 
-test01x: test01x.c thread.o
-	$(CC) -g test01x.c -o test01x thread.o linked_list.o
-
-test03: test03.c semaphore.o
-	$(CC) -g test03.c -o test03 semaphore.o thread.o linked_list.o
-
-test06: test06.c mailbox.o
-	$(CC) -g test06.c -o test06 mailbox.o semaphore.o thread.o linked_list.o
 clean: 
 	rm -rf *.o $(BINS)

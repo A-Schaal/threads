@@ -52,8 +52,9 @@ void mbox_withdraw(mbox_t *mb, char *msg, int *len) {
       mb->message_queue, 
       (void *) envelope,
       compare_pointer,
-      free_nothing 
+      (free_f) envelope_destroy
     );
+    
     strcpy(msg, envelope->message);
     *len = envelope->len;
   
@@ -80,4 +81,12 @@ int envelope_create(envelope_t **msg, char *content, int len, int sender, int re
 void envelope_destroy(envelope_t *envelope) {
   free(envelope->message);
   free(envelope);
+}
+
+int compare_envelope_sender(int *id, envelope_t *envelope) {
+  if (ANY_THREAD == *id) {
+    return 0;
+  }
+
+  return *id - envelope->sender;
 }

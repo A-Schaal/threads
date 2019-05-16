@@ -5,6 +5,8 @@
 
   #define ANY_THREAD 0
   #define NO_THREAD -1
+  
+  #define STACK_SIZE 0x10000
 
   typedef void (*start_f) (int thread_id);
 
@@ -29,5 +31,8 @@
   void t_yield();
   int t_get_cur_thread_id();
 
-  #define STACK_SIZE 0x10000
+  //message passing api
+  void send(int tid, char *msg, int len);
+  void receive(int *tid, char *msg, int *len);
+
 #endif
