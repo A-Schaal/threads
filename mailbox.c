@@ -32,7 +32,7 @@ void mbox_destroy(mbox_t **mb) {
 
 void mbox_deposit(mbox_t *mb, char *msg, int len) {
   envelope_t *envelope;
-  envelope_create(&envelope, msg, len, get_cur_thread_id(), ANY_THREAD);
+  envelope_create(&envelope, msg, len, t_get_cur_thread_id(), ANY_THREAD);
 
   //only one thread should modify the message queue at a time
   sem_wait(mb->sem);
@@ -40,7 +40,7 @@ void mbox_deposit(mbox_t *mb, char *msg, int len) {
   sem_signal(mb->sem);
 }
 
-void mbox_withdrawl(mbox_t *mb, char *msg, int *len) {
+void mbox_withdraw(mbox_t *mb, char *msg, int *len) {
   //only one thread should modify the message queue at a time
   sem_wait(mb->sem);
   

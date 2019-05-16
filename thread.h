@@ -27,7 +27,7 @@
   void t_run_next();
   void t_terminate();
   void t_yield();
-  int get_cur_thread_id();
+  int t_get_cur_thread_id();
 
   #define STACK_SIZE 0x10000
 #endif

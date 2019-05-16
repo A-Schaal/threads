@@ -36,7 +36,7 @@ void read_function(int val)
       sem_signal(s);
    }
 
-   t_terminate () ;
+   t_terminate();
 }
 
 void write_function(int val) 

@@ -45,7 +45,7 @@ void sem_signal(sem_t *sp) {
   if (NULL != sp->waitlist) {
     int flag = 1;
 
-    tcb_t *cur_tcb = t_halt(0,0);
+    tcb_t *cur_tcb = t_halt(0,1);
     getcontext(&cur_tcb->thread_context);
 
     //only do this part once
