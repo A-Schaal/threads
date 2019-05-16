@@ -4,7 +4,7 @@ TESTS = test01@ test01x@ test03@
 BINS = $(subst @,,$(TESTS))
 
 .PHONY:all
-all: test01 test01x semaphore.o test03
+all: $(BINS)
 
 linked_list.o: linked_list.c linked_list.h
 	$(CC) -g -c linked_list.c
@@ -15,6 +15,9 @@ thread.o: thread.c thread.h linked_list.o
 semaphore.o: semaphore.c semaphore.h 
 	$(CC) -g -c semaphore.c
 
+mailbox.o: mailbox.c mailbox.h
+	$(CC) -g -c mailbox.c
+
 test01: test01.c thread.o
 	$(CC) -g test01.c -o test01 thread.o linked_list.o
 
@@ -23,5 +26,6 @@ test01x: test01x.c thread.o
 
 test03: test03.c semaphore.o
 	$(CC) -g test03.c -o test03 semaphore.o thread.o linked_list.o
+
 clean: 
 	rm -rf *.o $(BINS)
