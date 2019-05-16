@@ -4,9 +4,12 @@
 
 #include "thread.h"
 #include "linked_list.h"
+#include "semaphore.h"
+#include "mailbox.h"
 
 linked_list_t *running_list;
 linked_list_t *ready_list;
+mailbox_t *post_office;
 
 void t_init() {
   tcb_t *main = malloc(sizeof(tcb_t));
@@ -17,11 +20,17 @@ void t_init() {
 
   running_list = add_to_linked_list(NULL, (void *) main);
   ready_list = NULL;
+
+  //set up our post office for holding sent messages
+  mbox_create(&post_office);
 }
 
 void t_shutdown() {
   free_linked_list(running_list, (free_f) free_tcb);
   free_linked_list(ready_list, (free_f) free_tcb);
+
+  //burn the post office TO THE GROUND...because we're done with it
+  mbox_destroy(&post_office);
 }
 
 //just compares the thread ids
@@ -155,4 +164,41 @@ int t_get_cur_thread_id() {
 
   tcb_t *cur_tcb = (tcb_t *) running_list->value;
   return cur_tcb->thread_id;
+}
+
+void send(int tid, char *msg, int len) {
+  envelope_t *envelope;
+  envelope_create(&envelope, msg, len, t_get_cur_thread_id(), tid);
+
+  //only one thread should modify the message queue at a time
+  sem_wait(post_office->sem);
+  post_office->message_queue = append_to_linked_list(post_office->message_queue, (void *) envelope);
+  sem_signal(post_office->sem);
+}
+
+void receive(int *tid, char msg, int *len) {
+  //only one thread should modify the message queue at a time
+  sem_wait(post_office->sem);
+  
+  envelope_t *envelope;
+  envelope = find_in_linked_list(
+    post_office->message_queue,
+    (void *) tid,
+    (compare_f) compare_enevlop_id
+  );
+  
+  if (NULL == envelope) {
+    //just return nothing if we didn't find any message in the queue
+    msg = NULL;
+    len = 0;
+  } else {
+    post_office->message_queue = remove_from_linked_list(
+      post_office->message_queue, 
+      (void *) envelope,
+      compare_pointer,
+      free_nothing 
+    );
+  }
+
+  sem_signal(mb->sem);
 }

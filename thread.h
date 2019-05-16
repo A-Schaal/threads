@@ -3,8 +3,8 @@
 
   #include <ucontext.h>
 
-  #define ANY_THREAD -1
-  #define NO_THREAD -2
+  #define ANY_THREAD 0
+  #define NO_THREAD -1
 
   typedef void (*start_f) (int thread_id);
 
