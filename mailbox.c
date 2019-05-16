@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "mailbox.h"
 #include "linked_list.h"
@@ -64,9 +65,10 @@ void mbox_withdraw(mbox_t *mb, char *msg, int *len) {
 }
 
 int envelope_create(envelope_t **msg, char *content, int len, int sender, int receiver) {
+  
   envelope_t *envelope = malloc(sizeof(envelope_t));
 
-  strcpy(envelope->message, content);
+  envelope->message = strdup( content);
   envelope->len = len;
   envelope->sender = sender;
   envelope->receiver = receiver;
