@@ -16,10 +16,15 @@
     sem_t         *sem;
   } mbox_t;
 
+  //mailbox api
   int mbox_create(mbox_t **mb);
   void mbox_destroy(mbox_t **mb);
   void mbox_deposit(mbox_t *mb, char *msg, int len);
   void mbox_withdraw(mbox_t *mb, char *msg, int *len);
   void send(int tid, char *msg, int len);
   void receive(int *tid, char *msg, int *len);
+
+  //envelope api
+  int envelope_create(envelope_t **msg, char *content, int len, int sender, int receiver);
+  void envelope_destroy(envelope_t envelope);
 #endif
