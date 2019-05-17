@@ -188,9 +188,11 @@ void receive(int *tid, char *msg, int *len) {
   );
   
   if (NULL == envelope) {
+    printf("INSIDE NULL");
     //just return nothing if we didn't find any message in the queue
     msg = NULL;
     len = 0;
+    tid = 0;
   } else {
     post_office->message_queue = remove_from_linked_list(
       post_office->message_queue, 
@@ -199,8 +201,9 @@ void receive(int *tid, char *msg, int *len) {
       (free_f) free_nothing //envelope_destroy
     );
     
-    strcpy(msg,envelope->message);
+    strcpy(msg, envelope->message);
     *len = envelope->len;
+    *tid = envelope->sender;
   }
 
   sem_signal(post_office->sem);
