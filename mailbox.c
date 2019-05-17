@@ -52,7 +52,7 @@ void mbox_withdraw(mbox_t *mb, char *msg, int *len) {
       mb->message_queue, 
       (void *) envelope,
       compare_pointer,
-      (free_f) envelope_destroy
+      (free_f) free_nothing
     );
     
     strcpy(msg, envelope->message);

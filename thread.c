@@ -196,10 +196,10 @@ void receive(int *tid, char *msg, int *len) {
       post_office->message_queue, 
       (void *) envelope,
       compare_pointer,
-      (free_f) envelope_destroy
+      (free_f) free_nothing //envelope_destroy
     );
     
-    strcpy(msg, envelope->message);
+    strcpy(msg,envelope->message);
     *len = envelope->len;
   }
 
