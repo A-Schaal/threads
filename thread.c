@@ -194,16 +194,16 @@ void receive(int *tid, char *msg, int *len) {
     len = 0;
     tid = 0;
   } else {
+    strcpy(msg, envelope->message);
+    *len = envelope->len;
+    *tid = envelope->sender;
     post_office->message_queue = remove_from_linked_list(
       post_office->message_queue, 
       (void *) envelope,
       compare_pointer,
-      (free_f) free_nothing //envelope_destroy
+      (free_f) envelope_destroy  //free_nothing //envelope_destroy
     );
     
-    strcpy(msg, envelope->message);
-    *len = envelope->len;
-    *tid = envelope->sender;
   }
 
   sem_signal(post_office->sem);

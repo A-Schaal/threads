@@ -48,15 +48,15 @@ void mbox_withdraw(mbox_t *mb, char *msg, int *len) {
   if (NULL != mb->message_queue) {
     //pop the queue
     envelope_t *envelope = (envelope_t *) mb->message_queue->value;
+    strcpy(msg, envelope->message);
+    *len = envelope->len;
     mb->message_queue = remove_from_linked_list(
       mb->message_queue, 
       (void *) envelope,
       compare_pointer,
-      (free_f) free_nothing
+      (free_f) envelope_destroy //free_nothing
     );
     
-    strcpy(msg, envelope->message);
-    *len = envelope->len;
   
   } else {
     //just return nothing if we didn't find any message in the queue
@@ -84,6 +84,7 @@ void envelope_destroy(envelope_t *envelope) {
 }
 
 int compare_envelope_sender(int *id, envelope_t *envelope) {
+  printf("%s%d\n", "THREAD ID: ", id);
   if (ANY_THREAD == *id) {
     return 0;
   }

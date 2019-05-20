@@ -1,6 +1,6 @@
 CC = gcc
 
-TESTS = test01@ test01x@ test03@ test06@
+TESTS = test01@ test01x@ test03@ test06@ test05@ test08@
 BINS = $(subst @,,$(TESTS))
 
 LIBRARY_OBJS = linked_list.o thread.o semaphore.o mailbox.o
